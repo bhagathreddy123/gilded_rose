@@ -48,14 +48,16 @@ def update_quality(items)
 end
 
 def item_increment_quantity(item)
-  if item.quality < 50
-     item.quality += 1
-  end
+  item_update_quantity(item, 1)
 end
 
-def item_decrement_quantity(item, quantity_data)
-  if item.quality > 0
-      item.quality -= 1
+def item_decrement_quantity(item, quality_data)
+  item_update_quantity(item, -quality_data)
+end
+
+def item_update_quantity(item,  quality_data)
+  if item.quality < 50 && item.quality_data
+    item.quality += quality_data
   end
 end
 
