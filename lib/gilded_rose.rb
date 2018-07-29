@@ -6,7 +6,7 @@ def update_quality(items)
   items.each do |item|
     if item.name != AGED_BRIBE && item.name != BACKSTAGE_PASS
       if item.quality > 0
-        if item.name != ''
+        if item.name != SULFURAS
           item.quality -= 1
         end
       end
@@ -15,14 +15,10 @@ def update_quality(items)
         item.quality += 1
         if item.name == BACKSTAGE_PASS
           if item.sell_in < 11
-            if item.quality < 50
-              item.quality += 1
-            end
+            item_update_quantity(item, 1)
           end
           if item.sell_in < 6
-            if item.quality < 50
-              item.quality += 1
-            end
+           item_update_quantity(item, 1)
           end
         end
       end
@@ -34,29 +30,20 @@ def update_quality(items)
 
     if item.sell_in < 0
       if item.name == AGED_BRIBE
-        item_increment_quantity(item)
+        item_update_quantity(item, 1)
       elsif item.name == BACKSTAGE_PASS
-        item_decrement_quantity(item, item.quality)
+        item_update_quantity(item, -item.quality)
       elsif item.name = SULFURAS
 
       else
-        item_decrement_quantity(item, 1)
-        
+        item_update_quantity(item, -1)        
       end
     end
   end
 end
 
-def item_increment_quantity(item)
-  item_update_quantity(item, 1)
-end
-
-def item_decrement_quantity(item, quality_data)
-  item_update_quantity(item, -quality_data)
-end
-
 def item_update_quantity(item,  quality_data)
-  if item.quality < 50 && item.quality_data
+  if item.quality < 50 && item.quality_data > 0
     item.quality += quality_data
   end
 end
