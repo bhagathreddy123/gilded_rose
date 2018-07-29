@@ -31,22 +31,31 @@ def update_quality(items)
     if item.name != SULFURAS
       item.sell_in -= 1
     end
-    
+
     if item.sell_in < 0
       if item.name == AGED_BRIBE
-        if item.quality < 50
-          item.quality += 1
-        end
+        item_increment_quantity(item)
       elsif item.name == BACKSTAGE_PASS
-        item.quality = item.quality - item.quality
+        item_decrement_quantity(item, item.quality)
       elsif item.name = SULFURAS
 
       else
-        if item.quality > 0
-          item.quality -= 1
-        end
+        item_decrement_quantity(item, 1)
+        
       end
     end
+  end
+end
+
+def item_increment_quantity(item)
+  if item.quality < 50
+     item.quality += 1
+  end
+end
+
+def item_decrement_quantity(item, quantity_data)
+  if item.quality > 0
+      item.quality -= 1
   end
 end
 
