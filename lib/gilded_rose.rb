@@ -1,6 +1,7 @@
 AGED_BRIBE = 'Aged Bribe'
 BACKSTAGE_PASS = 'Backstage passes to a TAFKAL80ETC concert'
 SULFURAS = 'Sulfuras, Hand of Ragnaros'
+CONJURE = 'Conjured Item'
 
 class ItemUpdater
   attr_reader :item, :quality_data
@@ -50,6 +51,8 @@ def update_quality(items)
      ItemUpdater.new(item, 1).update
     when SULFURAS
 
+    when CONJURE
+      ItemUpdater.new(item, -2).update
     else
       ItemUpdater.new(item, -1).update
     end
