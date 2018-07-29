@@ -2,56 +2,61 @@ AGED_BRIBE = 'Aged Bribe'
 BACKSTAGE_PASS = 'Backstage passes to a TAFKAL80ETC concert'
 SULFURAS = 'Sulfuras, Hand of Ragnaros'
 
+class ItemUpdater
+  attr_reader :item, :quality_data
+
+  def initialize(item, quality_data)
+    @item = item
+    @quality_data = quality_data
+  end
+
+  def update
+    item.sell_in -= 1
+    item_update_quantity
+    item_update_quantity if expired?(item)
+  end
+
+  def expired?
+    item.sell_in < 0
+  end
+  
+  def item_update_quantity
+    if item.quality < 50 && item.quality_data > 0
+      item.quality += quality_data
+    end
+  end
+end
+
+class BackstageUpdater < ItemUpdater
+  def quality_data
+   if expired?(item)
+      -item.quality
+    elsif item.sell_in < 5
+      3
+    elsif item.sell_in < 10
+      2
+    else
+      @quality_data
+    end
+  end
+end
+
 def update_quality(items)
   items.each do |item|
-
-    if item.name != SULFURAS
-      item.sell_in -= 1
-    end
-
     case item.name
     when BACKSTAGE_PASS
-      item_update_quantity(item, 1)
-        if item.sell_in < 10
-          item_update_quantity(item, 1)
-        end
-        if item.sell_in < 5
-          item_update_quantity(item, 1)
-        end
-        item_update_quantity(item, -item.quality) if expired?(item)
+      BackstageUpdater.new(item, 1).update
     when AGED_BRIBE
-      item_update_quantity(item, 1)
-       item_update_quantity(item, 1) if expired?(item)
+     ItemUpdater.new(item, 1).update
     when SULFURAS
 
     else
-      item_update_quantity(item, -1)
-      item_update_quantity(item, -1) if expired?(item)
-    end
-
-    
-    if expired?(item)
-      if item.name == AGED_BRIBE
-      
-      elsif item.name == BACKSTAGE_PASS
-      elsif item.name = SULFURAS
-
-      else
-           
-      end
+      ItemUpdater.new(item, -1).update
     end
   end
 end
 
-def expired?(item)
-  item.sell_in < 0
-end
 
-def item_update_quantity(item,  quality_data)
-  if item.quality < 50 && item.quality_data > 0
-    item.quality += quality_data
-  end
-end
 
 ######### DO NOT CHANGE BELOW #########
 
